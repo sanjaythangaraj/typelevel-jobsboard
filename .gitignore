@@ -9,5 +9,8 @@ metals.sbt
 .DS_Store
 target/
 project/target/
+dist
+node_modules
+.parcel-cache
 
 logs/
