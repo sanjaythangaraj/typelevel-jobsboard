@@ -9,6 +9,7 @@ import scala.concurrent.duration.*
 import scala.scalajs.js.annotation.*
 
 import core.*
+import components.*
 
 object App {
   type Msg = Router.Msg
@@ -26,9 +27,12 @@ class App extends TyrianApp[App.Msg, App.Model] {
   }
 
   override def subscriptions(model: Model): Sub[IO, Msg] =
-    Sub.make("urlChange", model.router.history.state.discrete
-    .map(_.get)
-    .map(Router.ChangeLocation(_, true)))
+    Sub.make(
+      "urlChange",
+      model.router.history.state.discrete
+        .map(_.get)
+        .map(Router.ChangeLocation(_, true))
+    )
 
   override def update(model: Model): Msg => (Model, Cmd[IO, Msg]) =
     msg =>
@@ -37,22 +41,8 @@ class App extends TyrianApp[App.Msg, App.Model] {
 
   override def view(model: Model): Html[Msg] =
     div(
-      renderNavLink("Jobs", "/jobs"),
-      renderNavLink("Login", "/login"),
-      renderNavLink("Sign Up", "/signup"),
+      Header.view(),
       div(s"You are now at ${model.router.location}")
     )
 
-  private def renderNavLink(text: String, location: String) =
-    a(
-      href    := location,
-      `class` := "nav-link",
-      onEvent(
-        "click",
-        e => {
-          e.preventDefault()
-          Router.ChangeLocation(location)
-        }
-      )
-    )(text)
 }
